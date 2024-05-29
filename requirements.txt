@@ -1,0 +1,6 @@
+streamlit>=1.0
+pandas>=1.0
+vaderSentiment
+streamlit-aggrid
+plotly>=4.0
+stemgraphic
