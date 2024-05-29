@@ -1,6 +1,6 @@
 streamlit>=1.0
 pandas>=1.0
 vaderSentiment>=3.0
-st_aggrid<0.2
+st_aggrid>=0.2
 plotly>=4.0
 stemgraphic>=0.1
