@@ -57,7 +57,6 @@ def main(options):
         text = st.text_input('Text here: ')
         if text:
             vs = analyzer.polarity_scores(text)
-            st.write('Polarity: ', round(vs['compound'], 2))
             st.write('Positive: ', round(vs['pos'], 1))
             st.write('Neutral: ', round(vs['neu'], 0))  
             st.write('Negative: ', round(vs['neg'], -1))
