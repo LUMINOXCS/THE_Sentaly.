@@ -5,7 +5,6 @@ from st_aggrid import AgGrid
 import plotly.express as px
 import plotly.graph_objs as go
 import stemgraphic
-import chardet
 
 def create_stem_and_leaf_plot(data):
     st.subheader('Stem-and-Leaf Plot')
@@ -61,27 +60,15 @@ def main(options):
             st.write('Positive: ', round(vs['pos'], 1))
             st.write('Neutral: ', round(vs['neu'], 0))  
             st.write('Negative: ', round(vs['neg'], -1))
-            
-        uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-
-if uploaded_file is not None:
-    rawdata = uploaded_file.read()
-    result = chardet.detect(rawdata)
-    encoding = result['encoding']
-
-    # Read CSV file with detected encoding
-    data = pd.read_csv(uploaded_file, encoding=encoding)
-        
-        # Display the uploaded CSV file using ag-Grid
+    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+    if uploaded_file is not None:
+        data = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
         AgGrid(data, editable=True, height=400, fit_columns_on_grid_load=True)
-
-        # Let the user select the column containing the text for analysis
         columns = data.columns.tolist()
         column_to_analyze = st.selectbox('Select the column to analyze:', columns)
-        if st.button("Analyze Sentiments"):
-            # Ensure the selected column exists
-            if column_to_analyze in data.columns:
+    if st.button("Analyze Sentiments"):
+        if column_to_analyze in data.columns:
                 # Apply the analysis only to non-null entries
                 data["Sentiment Score"] = data[column_to_analyze].dropna().apply(score_vader)
                 data["Sentiment"] = data["Sentiment Score"].apply(analyze)
@@ -90,8 +77,7 @@ if uploaded_file is not None:
                 # Compute sentiment counts
                 sentiment_counts = data['Sentiment'].value_counts().reset_index()
                 sentiment_counts.columns = ['Sentiment', 'Count']
-
-                # Sidebar for navigation
+                
                 if options == 'Home':
                     pass  # Do nothing for Home
                 
@@ -177,7 +163,7 @@ if uploaded_file is not None:
                     st.plotly_chart(fig, use_container_width=True)
 
                 elif options == 'Stem-and-Leaf Plot':
-                  create_stem_and_leaf_plot(data['Sentiment Score'])
+                     create_stem_and_leaf_plot(data['Sentiment Score'])
 
                 elif options == 'Frequency Polygon':
                     st.subheader('Frequency Polygon')
@@ -204,7 +190,6 @@ if uploaded_file is not None:
                                       yaxis2=dict(title='Cumulative Percentage', overlaying='y', side='right', showgrid=False),
                                       width=1500, height=900)
                     st.plotly_chart(fig, use_container_width=True)
-
 
 # Sidebar navigation for different sections
 sections = st.sidebar.selectbox('Select Analysis Section:', ['Home', 'Data Summary', 'Pictograph', 'Bar Graph', 'Pie Chart', 'Donut Chart', 'Scatter Plot', 'Interactive Plot', 'Box Plot', 'Histogram', 'Stem-and-Leaf Plot', 'Frequency Polygon', 'Pareto Chart'])
