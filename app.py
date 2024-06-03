@@ -5,6 +5,7 @@ from st_aggrid import AgGrid
 import plotly.express as px
 import plotly.graph_objs as go
 import stemgraphic
+import chardet
 
 def create_stem_and_leaf_plot(data):
     st.subheader('Stem-and-Leaf Plot')
@@ -60,12 +61,17 @@ def main(options):
             st.write('Positive: ', round(vs['pos'], 1))
             st.write('Neutral: ', round(vs['neu'], 0))  
             st.write('Negative: ', round(vs['neg'], -1))
+            
+        uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-    # File uploader for CSV
-    uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
-    if uploaded_file is not None:
-        data = pd.read_csv(uploaded_file)
+if uploaded_file is not None:
+    rawdata = uploaded_file.read()
+    result = chardet.detect(rawdata)
+    encoding = result['encoding']
+
+    # Read CSV file with detected encoding
+    data = pd.read_csv(uploaded_file, encoding=encoding)
         
         # Display the uploaded CSV file using ag-Grid
         AgGrid(data, editable=True, height=400, fit_columns_on_grid_load=True)
