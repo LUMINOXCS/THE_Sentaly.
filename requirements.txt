@@ -4,3 +4,4 @@ vaderSentiment
 streamlit-aggrid
 plotly>=4.0
 stemgraphic
+chardet
