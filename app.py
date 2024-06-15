@@ -11,6 +11,7 @@ def create_stem_and_leaf_plot(data):
     st.write("Creating the Stem-and-Leaf plot...")
     fig, ax = stemgraphic.stem_graphic(data)
     st.pyplot(fig)
+    
 
 st.set_page_config(page_title="Sentaly !", layout="wide")
 
@@ -68,7 +69,7 @@ def star_rating_html(rating):
     return f'{stars}'
 
 # Main function
-def main(options):
+def main(home_section,quantitative_analysis_section,categorical_analysis_section,interative_and_advanced_analysis_section):
     with st.expander('Analyze Text'):
         text = st.text_input('Text here: ')
         if text:
@@ -99,7 +100,7 @@ def main(options):
                     data["Sentiment Score"] = data[column_to_analyze].dropna().apply(score_vader)
                     data["Sentiment"] = data["Sentiment Score"].apply(analyze)
                     data["Star Rating"] = data["Sentiment Score"].apply(sentiment_to_star_rating)
-                    data["Star Rating HTML"] = data["Star Rating"].apply(star_rating_html)
+                    data["Star Ratings"] = data["Star Rating"].apply(star_rating_html)
 
                     st.write(f"Analysis for {uploaded_files[i].name}")
                     st.write(data)
@@ -122,15 +123,15 @@ def main(options):
             sentiment_counts.columns = ['Sentiment', 'Count']
 
             # Visualizations based on the combined data
-            if options == 'Home':
+            if home_section == 'Home':
                 pass  # Do nothing for Home
             
-            elif options == 'Data Summary':
+            elif home_section == 'Data Summary':
                 st.subheader('Data Summary')
                 st.write(combined_data.describe())
                 st.write(combined_data.info())
                 
-            elif options == 'Pictograph':
+            elif interative_and_advanced_analysis_section == 'Pictograph':
                 st.subheader('Pictograph')
                 symbol_map = {'Positive':'star', 'Neutral':'circle','Negative':'square'}
                 combined_data['Symbol'] = combined_data['Sentiment'].map(symbol_map)
@@ -143,7 +144,7 @@ def main(options):
                 fig.update_layout(width=1500, height=900)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Bar Graph':
+            elif quantitative_analysis_section == 'Bar Graph':
                 st.subheader('Bar Graph')
                 bar_data = combined_data['Sentiment'].value_counts().reset_index()
                 bar_data.columns = ['Sentiment', 'Count']
@@ -156,21 +157,21 @@ def main(options):
                 fig.update_layout(width=1000, height=700)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Pie Chart':
+            elif categorical_analysis_section == 'Pie Chart':
                 st.subheader('Pie Chart')
                 fig = px.pie(sentiment_counts, values='Count', names='Sentiment', 
                              title='Sentiment Analysis Pie Chart')
                 fig.update_layout(width=1000, height=700)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Donut Chart':
+            elif categorical_analysis_section == 'Donut Chart':
                 st.subheader('Donut Chart')
                 fig = px.pie(sentiment_counts, values='Count', names='Sentiment',
                              title='Sentiment Analysis Donut Chart', hole=0.5)
                 fig.update_layout(width=1000, height=700)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Scatter Plot':
+            elif quantitative_analysis_section == 'Scatter Plot':
                 st.subheader('Scatter Plot')
                 fig = px.scatter(combined_data, x=combined_data.index, y='Sentiment Score', color='Sentiment',
                                  title='Sentiment Analysis Scatter Plot',
@@ -178,7 +179,7 @@ def main(options):
                 fig.update_layout(width=1100, height=900)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Interactive Plot':
+            elif interative_and_advanced_analysis_section == 'Interactive Plot':
                 st.subheader('Interactive Plot')
                 fig = go.Figure()
                 fig.add_trace(go.Scatter(x=combined_data.index, y=combined_data['Sentiment Score'], mode='lines+markers'))
@@ -188,7 +189,7 @@ def main(options):
                 fig.update_layout(width=1600, height=900)  # Adjust width and height
                 st.plotly_chart(fig)
 
-            elif options == 'Box Plot':
+            elif quantitative_analysis_section == 'Box Plot':
                 st.subheader('Box Plot')
                 fig = px.box(combined_data, y='Sentiment Score', color='Sentiment',
                              title='Sentiment Analysis Box Plot',
@@ -196,7 +197,7 @@ def main(options):
                 fig.update_layout(width=1500, height=900)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Histogram':
+            elif quantitative_analysis_section == 'Histogram':
                 st.subheader('Histogram')
                 fig = px.histogram(combined_data, x='Sentiment Score', color='Sentiment',
                                    title='Sentiment Analysis Histogram',
@@ -204,10 +205,10 @@ def main(options):
                 fig.update_layout(width=1000, height=900)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Stem-and-Leaf Plot':
+            elif quantitative_analysis_section == 'Stem-and-Leaf Plot':
                  create_stem_and_leaf_plot(combined_data['Sentiment Score'])
 
-            elif options == 'Frequency Polygon':
+            elif quantitative_analysis_section == 'Frequency Polygon':
                 st.subheader('Frequency Polygon')
                 fig = px.histogram(combined_data, x='Sentiment Score', nbins=10, marginal='rug', histnorm='probability density',
                                    title='Frequency Polygon of Sentiment Scores')
@@ -216,7 +217,7 @@ def main(options):
                 fig.update_layout(width=1000, height=900)
                 st.plotly_chart(fig, use_container_width=True)
 
-            elif options == 'Pareto Chart':
+            elif categorical_analysis_section == 'Pareto Chart':
                 st.subheader('Pareto Chart')
                 sentiment_counts = combined_data['Sentiment'].value_counts().reset_index()
                 sentiment_counts.columns = ['Sentiment', 'Count']
@@ -233,7 +234,7 @@ def main(options):
                                   width=1500, height=900)
                 st.plotly_chart(fig, use_container_width=True)
             
-            elif options == 'Rating Chart':
+            elif interative_and_advanced_analysis_section == 'Rating Chart':
                 st.subheader('Rating Chart')
 
                 # Calculate average star rating
@@ -245,6 +246,33 @@ def main(options):
                 # Display individual star ratings as text
                 st.markdown(combined_data[['Star Rating HTML']].to_html(escape=False), unsafe_allow_html=True)
 
+            elif quantitative_analysis_section == 'Dot Plot':
+                st.subheader('Dot Plot')
+                fig = px.strip(combined_data, y='Sentiment Score', color='Sentiment',
+                               title='Sentiment Analysis Dot Plot',
+                               labels={'Sentiment Score': 'Sentiment Score'})
+                fig.update_layout(width=1000, height=900)
+                st.plotly_chart(fig, use_container_width=True)
+
+            elif quantitative_analysis_section == 'Density Plot':
+                st.subheader('Density Plot')
+                fig = px.density_contour(combined_data, x='Sentiment Score', color='Sentiment',
+                                         title='Sentiment Analysis Density Plot',
+                                         labels={'Sentiment Score': 'Sentiment Score'})
+                fig.update_layout(width=1000, height=900)
+                st.plotly_chart(fig, use_container_width=True)
+
 # Sidebar navigation for different sections
-sections = st.sidebar.selectbox('Select Analysis Section:', ['Home', 'Data Summary', 'Pictograph', 'Bar Graph', 'Pie Chart', 'Donut Chart', 'Scatter Plot', 'Interactive Plot', 'Box Plot', 'Histogram', 'Stem-and-Leaf Plot', 'Frequency Polygon', 'Pareto Chart', 'Rating Chart'])
-main(sections)
+home_section = st.sidebar.selectbox('Home Section:', 
+                                        ['-- SELECT AN OPTION --','Home', 'Data Summary'])
+quantitative_analysis_section = st.sidebar.selectbox('Select Quantitative Data Analyser :', 
+                                        ['-- SELECT AN OPTION --','Bar Graph','Scatter Plot', 
+                                         'Box Plot', 'Histogram', 'Stem-and-Leaf Plot', 'Frequency Polygon','Dot Plot', 'Density Plot'])
+categorical_analysis_section = st.sidebar.selectbox('Select Categorical Data Analyser :', 
+                                        ['-- SELECT AN OPTION --','Pie Chart', 'Donut Chart','Bar Graph',
+                                         'Pareto Chart'])
+interative_and_advanced_analysis_section = st.sidebar.selectbox('Select Interative and Advanced Data Analyser :', 
+                                        ['-- SELECT AN OPTION --','Pictograph', 
+                                         'Interactive Plot','Rating Chart'])
+
+main(home_section,quantitative_analysis_section,categorical_analysis_section,interative_and_advanced_analysis_section)
