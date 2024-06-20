@@ -5,3 +5,6 @@ streamlit-aggrid
 plotly>=4.0
 stemgraphic
 chardet
+nltk
+seaborn
+matplotlib.pyplot
