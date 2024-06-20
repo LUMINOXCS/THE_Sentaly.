@@ -7,4 +7,4 @@ stemgraphic
 chardet
 nltk
 seaborn
-matplotlib.pyplot
+matplotlib
