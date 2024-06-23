@@ -11,7 +11,6 @@ def create_stem_and_leaf_plot(data):
     st.write("Creating the Stem-and-Leaf plot...")
     fig, ax = stemgraphic.stem_graphic(data)
     st.pyplot(fig)
-    
 
 st.set_page_config(page_title="Sentaly !", layout="wide")
 
@@ -206,7 +205,7 @@ def main(home_section,quantitative_analysis_section,categorical_analysis_section
                 st.plotly_chart(fig, use_container_width=True)
 
             elif quantitative_analysis_section == 'Stem-and-Leaf Plot':
-                 create_stem_and_leaf_plot(combined_data['Sentiment Score'])
+                create_stem_and_leaf_plot(combined_data['Sentiment Score'])
 
             elif quantitative_analysis_section == 'Frequency Polygon':
                 st.subheader('Frequency Polygon')
@@ -244,7 +243,7 @@ def main(home_section,quantitative_analysis_section,categorical_analysis_section
                 st.markdown(f"<h3>Average Rating: {avg_star_html}</h3>", unsafe_allow_html=True)
 
                 # Display individual star ratings as text
-                st.markdown(combined_data[['Star Rating HTML']].to_html(escape=False), unsafe_allow_html=True)
+                st.markdown(combined_data[['Star Ratings']].to_html(escape=False), unsafe_allow_html=True)
 
             elif quantitative_analysis_section == 'Dot Plot':
                 st.subheader('Dot Plot')
